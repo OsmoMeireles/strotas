@@ -1,13 +1,15 @@
 import pandas as ps
 import streamlit as st
+from datetime import datetime, timedelta
 
 st.set_page_config(page_title="Dados Meli",
                    page_icon=":bar_chart:", layout="wide")
 
 st.sidebar.title("Dashboard")
 
-st.sidebar.image("meli.png", width=100)
-st.sidebar.title("Filtros")
+st.sidebar.image("meli.png", width=90)
+# Título da Sidebar
+st.sidebar.header("Filtros")
 transportadora = st.sidebar.selectbox("Selecione a transportadora:", [
     "ADO",
     "ALC",
@@ -25,3 +27,45 @@ transportadora = st.sidebar.selectbox("Selecione a transportadora:", [
     "P. SPOT",
     "RODACOOP"
 ])
+
+# Configuração da página (opcional)
+st.set_page_config(page_title="Filtro de Calendário", layout="wide")
+
+# --- CONFIGURAÇÃO DO CALENDÁRIO NA SIDEBAR ---
+
+# Definindo as datas padrão (Hoje e daqui a 7 dias)
+data_hoje = datetime.today()
+daqui_uma_semana = data_hoje + timedelta(days=7)
+
+# Calendário com seleção de intervalo (passando uma tupla no 'value')
+intervalo_datas = st.sidebar.date_input(
+    label="Selecione o período:",
+    value=(data_hoje, daqui_uma_semana),
+    format="DD/MM/YYYY"  # Formato de exibição brasileiro
+)
+
+# --- TRATAMENTO DOS DADOS SELECIONADOS ---
+
+# O Streamlit retorna uma tupla. É importante verificar se o usuário já selecionou
+# ambas as datas (início e fim) para evitar erros no código enquanto ele clica.
+if isinstance(intervalo_datas, tuple) and len(intervalo_datas) == 2:
+    data_inicio, data_fim = intervalo_datas
+
+    # Exibe as datas selecionadas na tela principal
+    st.sidebar.success(f"Período selecionado com sucesso!")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.sidebar.metric(label="Data de Início",
+                          value=data_inicio.strftime("%d/%m/%Y"))
+    with col2:
+        st.sidebar.metric(label="Data de Fim",
+                          value=data_fim.strftime("%d/%m/%Y"))
+
+    # Aqui você pode usar 'data_inicio' e 'data_fim' para filtrar seus DataFrames ou consultas SQL:
+    # df_filtrado = df[(df['data'] >= data_inicio) & (df['data'] <= data_fim)]
+
+else:
+    # Mensagem amigável caso o usuário tenha clicado apenas na data de início e ainda não na de fim
+    st.sidebar.info(
+        "Por favor, selecione a data de término no calendário da barra lateral.")
