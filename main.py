@@ -51,21 +51,12 @@ intervalo_datas = st.sidebar.date_input(
 if isinstance(intervalo_datas, tuple) and len(intervalo_datas) == 2:
     data_inicio, data_fim = intervalo_datas
 
-    # Exibe as datas selecionadas na tela principal
-    st.sidebar.success(f"Período selecionado com sucesso!")
-
-    col1, col2 = st.columns(2)
-    with col1:
-        st.sidebar.metric(label="Data de Início",
-                          value=data_inicio.strftime("%d/%m/%Y"))
-    with col2:
-        st.sidebar.metric(label="Data de Fim",
-                          value=data_fim.strftime("%d/%m/%Y"))
-
-    # Aqui você pode usar 'data_inicio' e 'data_fim' para filtrar seus DataFrames ou consultas SQL:
-    # df_filtrado = df[(df['data'] >= data_inicio) & (df['data'] <= data_fim)]
-
 else:
     # Mensagem amigável caso o usuário tenha clicado apenas na data de início e ainda não na de fim
     st.sidebar.info(
         "Por favor, selecione a data de término no calendário da barra lateral.")
+
+st.sidebar.success("Qualidade GERA Lucratividade!")
+st.sidebar.success("Detalhe DEFINE Resultado!")
+st.sidebar.text("Desenvolvido por: \n\n")
+st.sidebar.text("Osmo Meireles\n osmo.cmeireles@mercadolivre.com")
